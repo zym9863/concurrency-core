@@ -1,36 +1,144 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 并发核心可视化模拟器
 
-## Getting Started
+一个基于 Next.js 的交互式并发核心可视化模拟器，帮助理解操作系统中的进程调度和生命周期管理。
 
-First, run the development server:
+## 🚀 功能特性
 
+### 1. 进程/线程生命周期可视化模拟器
+- **动态创建**: 通过界面创建新进程，支持自定义参数
+- **状态队列可视化**: 直观展示就绪队列、运行中、阻塞队列、已终止等状态
+- **流畅动画**: 进程状态转换时的平滑动画效果
+- **详细信息**: 点击进程卡片查看详细信息（PID、优先级、执行时间等）
+- **手动干预**: 支持手动阻塞、唤醒、终止进程
+
+### 2. 可交互的CPU调度算法演示
+- **多种算法支持**:
+  - 先来先服务 (FCFS)
+  - 短作业优先 (SJF)
+  - 优先级调度 (Priority Scheduling)
+  - 时间片轮转 (Round Robin)
+- **实时甘特图**: 动态生成和更新甘特图，展示CPU调度过程
+- **性能指标**: 自动计算平均等待时间、周转时间、响应时间等
+- **算法对比**: 切换不同算法观察性能差异
+
+### 3. 高级功能
+- **实时监控**: 实时显示当前时间、模拟状态、进程数量
+- **速度控制**: 可调节模拟速度（0.5x - 5x）
+- **快速开始**: 一键创建示例进程集合
+- **响应式设计**: 适配不同屏幕尺寸
+
+## 🛠️ 技术栈
+
+- **前端框架**: Next.js 15 + React 19
+- **状态管理**: Zustand
+- **动画库**: Framer Motion
+- **图表库**: Recharts
+- **样式**: Tailwind CSS
+- **图标**: Lucide React
+- **包管理**: pnpm
+
+## 📦 安装和运行
+
+### 环境要求
+- Node.js 18+
+- pnpm
+
+### 安装依赖
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 启动开发服务器
+```bash
+pnpm dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+打开 [http://localhost:3000](http://localhost:3000) 查看应用。
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 构建生产版本
+```bash
+pnpm build
+pnpm start
+```
 
-## Learn More
+## 🎯 使用指南
 
-To learn more about Next.js, take a look at the following resources:
+### 快速开始
+1. **创建进程**: 点击"创建进程"按钮或使用快速开始指南
+2. **选择算法**: 在顶部下拉菜单中选择调度算法
+3. **开始模拟**: 点击"开始"按钮启动模拟
+4. **观察结果**: 查看进程状态变化、甘特图和性能指标
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 进程管理
+- **创建进程**: 设置进程名称、执行时间、优先级、到达时间
+- **状态控制**: 手动阻塞、唤醒或终止进程
+- **实时监控**: 观察进程在不同状态队列间的移动
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 调度算法
+- **FCFS**: 按到达顺序执行，适合批处理系统
+- **SJF**: 优先执行短作业，最小化平均等待时间
+- **Priority**: 按优先级执行，支持抢占式调度
+- **Round Robin**: 时间片轮转，保证公平性
 
-## Deploy on Vercel
+### 性能分析
+- **等待时间**: 进程在就绪队列中的等待时间
+- **周转时间**: 从提交到完成的总时间
+- **响应时间**: 从提交到首次执行的时间
+- **CPU利用率**: CPU忙碌时间的百分比
+- **吞吐量**: 单位时间完成的进程数
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📁 项目结构
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+concurrency-core/
+├── app/                    # Next.js App Router
+│   ├── page.tsx           # 主页面
+│   ├── layout.tsx         # 布局组件
+│   └── globals.css        # 全局样式
+├── components/            # React 组件
+│   ├── ProcessCard.tsx    # 进程卡片
+│   ├── ProcessQueue.tsx   # 进程队列
+│   ├── GanttChart.tsx     # 甘特图
+│   ├── PerformanceMetrics.tsx # 性能指标
+│   ├── ProcessCreationModal.tsx # 创建进程模态框
+│   └── QuickStartGuide.tsx # 快速开始指南
+├── lib/                   # 工具库
+│   └── schedulers.ts      # 调度算法实现
+├── store/                 # 状态管理
+│   └── simulator.ts       # 模拟器状态
+├── types/                 # TypeScript 类型定义
+│   └── process.ts         # 进程相关类型
+└── public/               # 静态资源
+```
+
+## 🔧 开发
+
+### 代码规范
+- 使用 Biome 进行代码格式化和检查
+- 遵循 TypeScript 严格模式
+- 组件采用函数式编程风格
+
+### 调试
+```bash
+# 代码检查
+pnpm lint
+
+# 代码格式化
+pnpm format
+```
+
+## 🎓 教育价值
+
+这个项目特别适合：
+- **操作系统课程**: 理解进程调度算法
+- **计算机科学教育**: 可视化抽象概念
+- **算法学习**: 对比不同调度策略的性能
+- **系统设计**: 了解并发系统的工作原理
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+## 📄 许可证
+
+MIT License
