@@ -214,27 +214,36 @@ export default function Home() {
   }, [isRunning, isPaused, timeScale, currentTime, processes, readyQueue, runningProcess]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 animate-fade-in">
       {/* 头部导航 */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-3">
-              <Cpu className="w-8 h-8 text-blue-600" />
-              <h1 className="text-2xl font-bold text-gray-900">并发核心可视化模拟器</h1>
+      <header className="relative bg-gradient-to-r from-white via-blue-50 to-purple-50 shadow-soft border-b border-white/20 backdrop-blur-sm">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/5 to-purple-600/5"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <Cpu className="w-10 h-10 text-blue-600 animate-pulse-slow" />
+                <div className="absolute inset-0 w-10 h-10 bg-blue-600/20 rounded-full blur-md"></div>
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  并发核心可视化模拟器
+                </h1>
+                <p className="text-sm text-slate-600 mt-1">实时进程调度算法可视化平台</p>
+              </div>
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
               {/* 调度算法选择器 */}
-              <div className="flex items-center space-x-2">
-                <Settings className="w-4 h-4 text-gray-500" />
+              <div className="flex items-center space-x-3 bg-white/60 backdrop-blur-sm rounded-xl px-4 py-2 shadow-soft">
+                <Settings className="w-5 h-5 text-blue-600" />
                 <select
                   value={config.algorithm}
                   onChange={(e) => setSchedulingConfig({
                     ...config,
                     algorithm: e.target.value as SchedulingAlgorithm
                   })}
-                  className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="bg-transparent border-0 text-sm font-medium text-slate-700 focus:outline-none focus:ring-0 cursor-pointer"
                   disabled={isRunning}
                 >
                   {SchedulerFactory.getAvailableAlgorithms().map(algo => (
@@ -247,8 +256,8 @@ export default function Home() {
 
               {/* 时间片设置（仅轮转调度） */}
               {config.algorithm === SchedulingAlgorithm.ROUND_ROBIN && (
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-600">时间片:</span>
+                <div className="flex items-center space-x-3 bg-white/60 backdrop-blur-sm rounded-xl px-4 py-2 shadow-soft">
+                  <span className="text-sm font-medium text-slate-700">时间片:</span>
                   <input
                     type="number"
                     min="1"
@@ -256,43 +265,43 @@ export default function Home() {
                     value={config.timeQuantum || 2}
                     onChange={(e) => setSchedulingConfig({
                       ...config,
-                      timeQuantum: parseInt(e.target.value) || 2
+                      timeQuantum: parseInt(e.target.value, 10) || 2
                     })}
-                    className="w-16 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-16 px-2 py-1 bg-white/80 border border-white/40 rounded-lg text-sm font-mono text-center focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-400"
                     disabled={isRunning}
                   />
-                  <span className="text-sm text-gray-600">ms</span>
+                  <span className="text-sm font-medium text-slate-700">ms</span>
                 </div>
               )}
 
               {/* 控制按钮 */}
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3">
                 <button
                   onClick={() => setIsCreateModalOpen(true)}
-                  className="flex items-center space-x-1 px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                  className="group flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl shadow-soft hover:shadow-glow hover:from-blue-700 hover:to-blue-800 transition-all duration-300 transform hover:scale-105"
                   disabled={isRunning}
                 >
-                  <Plus className="w-4 h-4" />
-                  <span>创建进程</span>
+                  <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
+                  <span className="font-medium">创建进程</span>
                 </button>
 
                 <button
                   onClick={toggleSimulation}
-                  className={`flex items-center space-x-1 px-3 py-2 rounded-md transition-colors ${
+                  className={`group flex items-center space-x-2 px-5 py-2.5 rounded-xl shadow-soft transition-all duration-300 transform hover:scale-105 font-medium ${
                     isRunning && !isPaused
-                      ? 'bg-yellow-600 text-white hover:bg-yellow-700'
-                      : 'bg-green-600 text-white hover:bg-green-700'
+                      ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:shadow-glow hover:from-amber-600 hover:to-orange-700'
+                      : 'bg-gradient-to-r from-emerald-500 to-green-600 text-white hover:shadow-glow-green hover:from-emerald-600 hover:to-green-700'
                   }`}
                   disabled={processes.length === 0}
                 >
                   {isRunning && !isPaused ? (
                     <>
-                      <Pause className="w-4 h-4" />
+                      <Pause className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
                       <span>暂停</span>
                     </>
                   ) : (
                     <>
-                      <Play className="w-4 h-4" />
+                      <Play className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
                       <span>开始</span>
                     </>
                   )}
@@ -300,18 +309,18 @@ export default function Home() {
 
                 <button
                   onClick={handleStopSimulation}
-                  className="flex items-center space-x-1 px-3 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+                  className="group flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-red-500 to-rose-600 text-white rounded-xl shadow-soft hover:shadow-glow hover:from-red-600 hover:to-rose-700 transition-all duration-300 transform hover:scale-105 font-medium"
                   disabled={!isRunning}
                 >
-                  <Square className="w-4 h-4" />
+                  <Square className="w-4 h-4 group-hover:rotate-45 transition-transform duration-300" />
                   <span>停止</span>
                 </button>
 
                 <button
                   onClick={handleResetSimulation}
-                  className="flex items-center space-x-1 px-3 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
+                  className="group flex items-center space-x-2 px-5 py-2.5 bg-gradient-to-r from-slate-500 to-gray-600 text-white rounded-xl shadow-soft hover:shadow-glow hover:from-slate-600 hover:to-gray-700 transition-all duration-300 transform hover:scale-105 font-medium"
                 >
-                  <RotateCcw className="w-4 h-4" />
+                  <RotateCcw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
                   <span>重置</span>
                 </button>
               </div>
@@ -323,50 +332,105 @@ export default function Home() {
       {/* 主要内容区域 */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* 状态信息栏 */}
-        <div className="mb-6 bg-white rounded-lg border border-gray-200 p-4">
+        <div className="mb-8 bg-gradient-to-r from-white via-blue-50/30 to-purple-50/30 backdrop-blur-sm rounded-2xl border border-white/40 p-6 shadow-soft animate-slide-in">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-6">
-              <div className="text-sm">
-                <span className="text-gray-600">当前时间:</span>
-                <span className="ml-2 font-mono font-bold text-lg text-blue-600">{currentTime}ms</span>
+            <div className="flex items-center space-x-8">
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-soft">
+                  <span className="text-white font-bold text-sm">T</span>
+                </div>
+                <div>
+                  <span className="text-sm text-slate-500 font-medium">当前时间</span>
+                  <div className="font-mono font-bold text-2xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    {currentTime}ms
+                  </div>
+                </div>
               </div>
-              <div className="text-sm">
-                <span className="text-gray-600">模拟状态:</span>
-                <span className={`ml-2 px-2 py-1 rounded-full text-xs font-medium ${
+              
+              <div className="flex items-center space-x-3">
+                <div className={`flex items-center justify-center w-3 h-3 rounded-full ${
                   isRunning
                     ? isPaused
-                      ? 'bg-yellow-100 text-yellow-800'
-                      : 'bg-green-100 text-green-800'
-                    : 'bg-gray-100 text-gray-800'
-                }`}>
-                  {isRunning ? (isPaused ? '已暂停' : '运行中') : '已停止'}
-                </span>
+                      ? 'bg-amber-400 animate-pulse'
+                      : 'bg-emerald-400 animate-pulse'
+                    : 'bg-slate-400'
+                }`}></div>
+                <div>
+                  <span className="text-sm text-slate-500 font-medium">模拟状态</span>
+                  <div className={`font-semibold ${
+                    isRunning
+                      ? isPaused
+                        ? 'text-amber-600'
+                        : 'text-emerald-600'
+                      : 'text-slate-600'
+                  }`}>
+                    {isRunning ? (isPaused ? '已暂停' : '运行中') : '已停止'}
+                  </div>
+                </div>
               </div>
-              <div className="text-sm">
-                <span className="text-gray-600">调度算法:</span>
-                <span className="ml-2 font-medium text-blue-600">
-                  {SchedulerFactory.getScheduler(config.algorithm).getName()}
-                </span>
+              
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl shadow-soft">
+                  <Settings className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <span className="text-sm text-slate-500 font-medium">调度算法</span>
+                  <div className="font-semibold text-purple-600">
+                    {SchedulerFactory.getScheduler(config.algorithm).getName()}
+                  </div>
+                </div>
               </div>
-              <div className="text-sm">
-                <span className="text-gray-600">进程总数:</span>
-                <span className="ml-2 font-bold text-gray-800">{processes.length}</span>
+              
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl shadow-soft">
+                  <span className="text-white font-bold text-lg">{processes.length}</span>
+                </div>
+                <div>
+                  <span className="text-sm text-slate-500 font-medium">进程总数</span>
+                  <div className="font-semibold text-emerald-600">
+                    {processes.length} 个进程
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* 时间缩放控制 */}
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-600">速度:</span>
-              <input
-                type="range"
-                min="0.5"
-                max="5"
-                step="0.5"
-                value={timeScale}
-                onChange={(e) => setTimeScale(parseFloat(e.target.value))}
-                className="w-20"
-              />
-              <span className="text-sm font-mono text-gray-800">{timeScale}x</span>
+            <div className="flex items-center space-x-4 bg-white/60 backdrop-blur-sm rounded-xl px-4 py-3 shadow-soft">
+              <span className="text-sm font-medium text-slate-600">速度:</span>
+              <div className="relative">
+                <input
+                  type="range"
+                  min="0.5"
+                  max="5"
+                  step="0.5"
+                  value={timeScale}
+                  onChange={(e) => setTimeScale(parseFloat(e.target.value))}
+                  className="w-24 h-2 bg-gradient-to-r from-blue-200 to-purple-200 rounded-lg appearance-none cursor-pointer slider"
+                />
+                <style jsx>{`
+                  .slider::-webkit-slider-thumb {
+                    appearance: none;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+                    cursor: pointer;
+                    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+                  }
+                  .slider::-moz-range-thumb {
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+                    cursor: pointer;
+                    border: none;
+                    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+                  }
+                `}</style>
+              </div>
+              <span className="text-sm font-mono font-bold text-slate-700 bg-gradient-to-r from-blue-100 to-purple-100 px-2 py-1 rounded-lg">
+                {timeScale}x
+              </span>
             </div>
           </div>
         </div>
