@@ -25,32 +25,37 @@ const getQueueInfo = (state: ProcessState) => {
     case ProcessState.READY:
       return {
         icon: <Clock className="w-5 h-5" />,
-        color: 'border-blue-300 bg-blue-50',
-        headerColor: 'bg-blue-100 text-blue-800'
+        color: 'bg-gradient-to-br from-blue-50 to-indigo-100 border-blue-200/60',
+        headerColor: 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white',
+        shadowColor: 'shadow-glow'
       };
     case ProcessState.RUNNING:
       return {
         icon: <Cpu className="w-5 h-5" />,
-        color: 'border-green-300 bg-green-50',
-        headerColor: 'bg-green-100 text-green-800'
+        color: 'bg-gradient-to-br from-emerald-50 to-green-100 border-emerald-200/60',
+        headerColor: 'bg-gradient-to-r from-emerald-500 to-green-600 text-white',
+        shadowColor: 'shadow-glow-green'
       };
     case ProcessState.BLOCKED:
       return {
         icon: <Pause className="w-5 h-5" />,
-        color: 'border-yellow-300 bg-yellow-50',
-        headerColor: 'bg-yellow-100 text-yellow-800'
+        color: 'bg-gradient-to-br from-amber-50 to-yellow-100 border-amber-200/60',
+        headerColor: 'bg-gradient-to-r from-amber-500 to-yellow-600 text-white',
+        shadowColor: 'shadow-soft'
       };
     case ProcessState.TERMINATED:
       return {
         icon: <CheckCircle className="w-5 h-5" />,
-        color: 'border-red-300 bg-red-50',
-        headerColor: 'bg-red-100 text-red-800'
+        color: 'bg-gradient-to-br from-rose-50 to-red-100 border-rose-200/60',
+        headerColor: 'bg-gradient-to-r from-rose-500 to-red-600 text-white',
+        shadowColor: 'shadow-soft'
       };
     default:
       return {
         icon: <Clock className="w-5 h-5" />,
-        color: 'border-gray-300 bg-gray-50',
-        headerColor: 'bg-gray-100 text-gray-800'
+        color: 'bg-gradient-to-br from-slate-50 to-gray-100 border-slate-200/60',
+        headerColor: 'bg-gradient-to-r from-slate-500 to-gray-600 text-white',
+        shadowColor: 'shadow-soft'
       };
   }
 };
@@ -72,24 +77,30 @@ export default function ProcessQueue({
   const queueInfo = getQueueInfo(state);
   
   return (
-    <div className={`border-2 rounded-lg ${queueInfo.color} overflow-hidden`}>
+    <div className={`border border-white/40 rounded-2xl ${queueInfo.color} ${queueInfo.shadowColor} overflow-hidden backdrop-blur-sm transition-all duration-300 hover:scale-[1.02]`}>
       {/* 队列头部 */}
-      <div className={`px-4 py-3 ${queueInfo.headerColor} flex items-center justify-between`}>
-        <div className="flex items-center space-x-2">
-          {queueInfo.icon}
-          <h3 className="font-semibold text-lg">{title}</h3>
-          <span className="px-2 py-1 text-xs bg-white bg-opacity-50 rounded-full">
-            {processes.length} 个进程
-          </span>
+      <div className={`px-5 py-4 ${queueInfo.headerColor} flex items-center justify-between shadow-soft`}>
+        <div className="flex items-center space-x-3">
+          <div className="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+            {queueInfo.icon}
+          </div>
+          <div>
+            <h3 className="font-bold text-lg">{title}</h3>
+            <div className="flex items-center space-x-2 mt-1">
+              <span className="px-3 py-1 text-xs font-medium bg-white/30 backdrop-blur-sm rounded-full">
+                {processes.length} 个进程
+              </span>
+            </div>
+          </div>
         </div>
         
         {/* 添加进程按钮 */}
         {onAddProcess && (
           <button
             onClick={onAddProcess}
-            className="flex items-center space-x-1 px-3 py-1 text-sm bg-white bg-opacity-50 hover:bg-opacity-75 rounded-md transition-colors"
+            className="group flex items-center space-x-2 px-4 py-2 text-sm font-medium bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-xl transition-all duration-300 transform hover:scale-105"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" />
             <span>添加进程</span>
           </button>
         )}
@@ -97,25 +108,29 @@ export default function ProcessQueue({
 
       {/* 队列内容区域 */}
       <div 
-        className="p-4 overflow-y-auto"
+        className="p-6 overflow-y-auto backdrop-blur-sm"
         style={{ maxHeight }}
       >
         <AnimatePresence mode="popLayout">
           {processes.length === 0 ? (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="text-center py-8 text-gray-500"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="text-center py-12"
             >
-              <div className="text-4xl mb-2">📭</div>
-              <p>队列为空</p>
+              <div className="relative mb-4">
+                <div className="text-6xl opacity-70 animate-pulse-slow">📭</div>
+                <div className="absolute inset-0 bg-white/10 rounded-full blur-xl"></div>
+              </div>
+              <p className="text-slate-600 font-medium mb-4">队列为空</p>
               {onAddProcess && (
                 <button
                   onClick={onAddProcess}
-                  className="mt-2 text-blue-500 hover:text-blue-700 underline"
+                  className="inline-flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl shadow-soft hover:shadow-glow hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 font-medium"
                 >
-                  创建第一个进程
+                  <Plus className="w-4 h-4" />
+                  <span>创建第一个进程</span>
                 </button>
               )}
             </motion.div>
