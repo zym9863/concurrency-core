@@ -216,7 +216,8 @@ export class SchedulingEngine {
       }
 
       // 选择下一个进程
-      const nextProcess = scheduler.selectNext(readyProcesses);
+      // 调用 selectNext 时传入 scheduling 配置作为第二个参数（修复参数数量不匹配）
+      const nextProcess = scheduler.selectNext(readyProcesses, config);
       if (nextProcess) {
         newRunningProcess = nextProcess.id;
         updatedReadyQueue = updatedReadyQueue.filter(id => id !== nextProcess.id);

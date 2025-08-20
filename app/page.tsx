@@ -381,7 +381,7 @@ export default function Home() {
             onProcessStateChange={updateProcessState}
             onProcessDelete={deleteProcess}
             onAddProcess={() => setIsCreateModalOpen(true)}
-            selectedProcessId={selectedProcessId}
+            selectedProcessId={selectedProcessId ?? undefined}
             maxHeight="400px"
           />
 
@@ -392,7 +392,7 @@ export default function Home() {
             onProcessClick={(process) => setSelectedProcessId(process.id)}
             onProcessStateChange={updateProcessState}
             onProcessDelete={deleteProcess}
-            selectedProcessId={selectedProcessId}
+            selectedProcessId={selectedProcessId ?? undefined}
             maxHeight="400px"
           />
 
@@ -403,7 +403,7 @@ export default function Home() {
             onProcessClick={(process) => setSelectedProcessId(process.id)}
             onProcessStateChange={updateProcessState}
             onProcessDelete={deleteProcess}
-            selectedProcessId={selectedProcessId}
+            selectedProcessId={selectedProcessId ?? undefined}
             maxHeight="400px"
           />
 
@@ -413,7 +413,7 @@ export default function Home() {
             state={ProcessState.TERMINATED}
             onProcessClick={(process) => setSelectedProcessId(process.id)}
             onProcessDelete={deleteProcess}
-            selectedProcessId={selectedProcessId}
+            selectedProcessId={selectedProcessId ?? undefined}
             maxHeight="400px"
           />
         </div>
